@@ -379,23 +379,23 @@ def custom_fit_model(model, tr_pairs, tr_y, test_pairs, test_y):
 
     # history.history
 
-    # Plot training & validation accuracy values
-    plt.plot(history.history['accuracy'])
-    plt.plot(history.history['val_accuracy'])
-    plt.title('Model accuracy')
-    plt.ylabel('Accuracy')
-    plt.xlabel('Epoch')
-    plt.legend(['Train', 'Test'], loc='upper left')
-    plt.show()
-
-    # Plot training & validation loss values
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('Model loss')
-    plt.ylabel('Loss')
-    plt.xlabel('Epoch')
-    plt.legend(['Train', 'Test'], loc='upper left')
-    plt.show()
+    # # Plot training & validation accuracy values
+    # plt.plot(history.history['accuracy'])
+    # plt.plot(history.history['val_accuracy'])
+    # plt.title('Model accuracy')
+    # plt.ylabel('Accuracy')
+    # plt.xlabel('Epoch')
+    # plt.legend(['Train', 'Test'], loc='upper left')
+    # plt.show()
+    #
+    # # Plot training & validation loss values
+    # plt.plot(history.history['loss'])
+    # plt.plot(history.history['val_loss'])
+    # plt.title('Model loss')
+    # plt.ylabel('Loss')
+    # plt.xlabel('Epoch')
+    # plt.legend(['Train', 'Test'], loc='upper left')
+    # plt.show()
     # compute final accuracy on training and test sets
     y_pred = model.predict([tr_pairs[:, 0], tr_pairs[:, 1]])
     tr_acc = compute_accuracy(tr_y, y_pred)
@@ -404,7 +404,7 @@ def custom_fit_model(model, tr_pairs, tr_y, test_pairs, test_y):
 
     print('* Accuracy on training set: %0.2f%%' % (100 * tr_acc))
     print('* Accuracy on test set: %0.2f%%' % (100 * te_acc))
-    return tr_acc, te_acc
+    return tr_acc, te_acc, history
 
 
 #
@@ -412,16 +412,17 @@ def custom_fit_model(model, tr_pairs, tr_y, test_pairs, test_y):
 # exp_2_train_accuracy, exp_2_test_accuracy = fit_model(custom_model, tr_pairs, tr_y, exp_2_pairs, exp_2_y)
 # exp_3_train_accuracy, exp_3_test_accuracy = fit_model(custom_model, tr_pairs, tr_y, exp_3_pairs, exp_3_y)
 
-exp_1_train_accuracy, exp_1_test_accuracy = custom_fit_model(custom_model, tr_pairs, tr_y, exp_1_pairs, exp_1_y)
-exp_2_train_accuracy, exp_2_test_accuracy = custom_fit_model(custom_model, tr_pairs, tr_y, exp_2_pairs, exp_2_y)
-exp_3_train_accuracy, exp_3_test_accuracy = custom_fit_model(custom_model, tr_pairs, tr_y, exp_3_pairs, exp_3_y)
+# exp_1_train_accuracy, exp_1_test_accuracy = custom_fit_model(custom_model, tr_pairs, tr_y, exp_1_pairs, exp_1_y)
+exp_2_train_accuracy, exp_2_test_accuracy, history = custom_fit_model(custom_model, tr_pairs, tr_y, exp_2_pairs,
+                                                                      exp_2_y)
+# exp_3_train_accuracy, exp_3_test_accuracy = custom_fit_model(custom_model, tr_pairs, tr_y, exp_3_pairs, exp_3_y)
 print('**********************************************************************')
-print('* Accuracy on training set: %0.2f%%' % (100 * exp_1_train_accuracy))
-print('* Accuracy on test set: %0.2f%%' % (100 * exp_1_test_accuracy))
-#
-# print('* Accuracy on training set: %0.2f%%' % (100 * exp_2_train_accuracy))
-# print('* Accuracy on test set: %0.2f%%' % (100 * exp_2_test_accuracy))
-#
+# print('* Accuracy on training set: %0.2f%%' % (100 * exp_1_train_accuracy))
+# print('* Accuracy on test set: %0.2f%%' % (100 * exp_1_test_accuracy))
+
+print('* Accuracy on training set: %0.2f%%' % (100 * exp_2_train_accuracy))
+print('* Accuracy on test set: %0.2f%%' % (100 * exp_2_test_accuracy))
+
 # print('* Accuracy on training set: %0.2f%%' % (100 * exp_3_train_accuracy))
 # print('* Accuracy on test set: %0.2f%%' % (100 * exp_3_test_accuracy))
 # #
@@ -450,24 +451,24 @@ print('* Accuracy on test set: %0.2f%%' % (100 * exp_1_test_accuracy))
 #                            validation_data=([exp_1_pairs[:, 0], exp_1_pairs[:, 1]], exp_1_y))
 
 # history.history
-#
-# # Plot training & validation accuracy values
-# plt.plot(history.history['accuracy'])
-# plt.plot(history.history['val_accuracy'])
-# plt.title('Model accuracy')
-# plt.ylabel('Accuracy')
-# plt.xlabel('Epoch')
-# plt.legend(['Train', 'Test'], loc='upper left')
-# plt.show()
-#
-# # Plot training & validation loss values
-# plt.plot(history.history['loss'])
-# plt.plot(history.history['val_loss'])
-# plt.title('Model loss')
-# plt.ylabel('Loss')
-# plt.xlabel('Epoch')
-# plt.legend(['Train', 'Test'], loc='upper left')
-# plt.show()
+
+# Plot training & validation accuracy values
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Model accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
+
+# Plot training & validation loss values
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
 #
 # from keras.utils import plot_model
 #
