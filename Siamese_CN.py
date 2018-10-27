@@ -175,6 +175,7 @@ digit_indices
 
 train_pairs, train_y = create_pairs_train(x_train, digit_indices, digits_group_1)
 train_pairs.shape
+
 # print(tr_pairs)  # (108400,2,28,28)
 # print(tr_y, len(tr_y))  # 108400,1 0 1 0交叉
 # print(train_pairs.shape)
@@ -261,3 +262,45 @@ plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Test'], loc='upper left')
 plt.show()
+
+from IPython.display import SVG
+from keras.utils.vis_utils import model_to_dot
+
+SVG(model_to_dot(model).create(prog='dot', format='svg'))
+
+from keras.utils import plot_model
+
+plot_model(model, to_file='model.png')
+
+x_test_features = model.predict([test_pairs[:, 0], test_pairs[:, 1]], verbose=True, batch_size=128)
+
+from sklearn.manifold import TSNE
+
+tsne_obj = TSNE(n_components=1,
+                init='pca',
+                random_state=101,
+                method='barnes_hut',
+                n_iter=500,
+                verbose=2)
+tsne_features = tsne_obj.fit_transform(x_test_features)
+
+obj_categories = ['0', '1', '2', '3',
+                  '4', '5', '6', '7', '8', '9'
+                  ]
+colors = plt.cm.rainbow(np.linspace(0, 1, 10))
+plt.figure(figsize=(10, 10))
+
+for c_group, (c_color, c_label) in enumerate(zip(colors, obj_categories)):
+    plt.scatter(tsne_features[np.where(y_test == c_group), 0],
+                tsne_features[np.where(y_test == c_group), 1],
+                marker='o',
+                color=c_color,
+                linewidth='1',
+                alpha=0.8,
+                label=c_label)
+plt.xlabel('Dimension 1')
+plt.ylabel('Dimension 2')
+plt.title('t-SNE on Testing Samples')
+plt.legend(loc='best')
+plt.savefig('clothes-dist.png')
+plt.show(block=False)
