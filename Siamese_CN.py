@@ -84,6 +84,8 @@ def create_CNN_model(shape):
     # Layer 0 should be Conv2D with 32 filters and 3x3 kernel size. Use 'relu' for the activation option
     custom_model.add(keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=shape))
     # Layer 1 should be another Conv2D with 64 filters and 3x3 kernel size. Use again 'relu' for the activation option.
+    custom_model.add(keras.layers.MaxPool2D())
+
     custom_model.add(keras.layers.Conv2D(64, (3, 3), activation='relu'))
     # Layer 2 should be a MaxPooling2D with pool_size 2x2.
     custom_model.add(keras.layers.MaxPool2D(pool_size=(2, 2)))
@@ -96,7 +98,7 @@ def create_CNN_model(shape):
     # Layer 6 should be a Dropout with probability 0.5.
     custom_model.add(keras.layers.Dropout(0.5))
     # Layer 7 should be a Dense layer with 10 neurons and 'softmax' as the activation function.
-    custom_model.add(keras.layers.Dense(10, activation='softmax'))
+    custom_model.add(keras.layers.Dense(7, activation='sigmoid'))
     return custom_model
 
 
@@ -177,53 +179,12 @@ n = min([len(digit_indices[d]) for d in range(len(digits_group_1))]) - 1
 print(n)
 # num_of_train_pair = 500
 train_pairs, train_y = create_pairs_train(x_train, digit_indices, digits_group_1)
-# train_pairs.shape
-#
-# pairs = []
-# labels = []
-# x = x_train
-# # calculate the min number of training sample of each digit in training set
-# min_sample = [len(digit_indices[d]) for d in range(len(digits_group_1))]
-# # calculate the number of pairs to be created
-# n = 3000
-# # Looping over each digits in the train_digits
-# for d in range(len(digits_group_1)):
-#     # Create n pairs of same digits and then create the same amount of pairs for the different digits
-#     for i in range(n):
-#         # Create a pair of same digits:
-#         # retrieve the index of a pair of same digit
-#         z1, z2 = digit_indices[d][i], digit_indices[d][i + 1]
-#         # Append the image pair of same digits to the pair list
-#         pairs += [[x[z1], x[z2]]]
-#
-#         # Create a pair of different digits
-#         # First create a randome integer rand falls between (1, len(train_digits))
-#         # let dn be (d+rand) % len(train_digit) so that dn will distinct from d
-#         # and that is guaranteed to be a different digits
-#         rand = random.randrange(1, len(digits_group_1))
-#         dn = (d + rand) % len(digits_group_1)
-#         # Use the dn and d to create a pair of different digits
-#         # the append it to the pair list
-#         z1, z2 = digit_indices[d][i], digit_indices[dn][i]
-#         pairs += [[x[z1], x[z2]]]
-#         # Append the corresponding label value for the true and false pairs of image created
-#         labels += [1, 0]
 
-# print(tr_pairs)  # (108400,2,28,28)
-# print(tr_y, len(tr_y))  # 108400,1 0 1 0交叉
-# print(train_pairs.shape)
-#
-# mask = [True if i in digits_to_be_removed else False for i in revised_y_test]
-# exp_2_X_test = revised_X_test[mask]
-# exp_2_y_test = revised_y_test[mask]
-
-# digit_indices = [np.where(revised_y_test == i)[0] for i in range(10)]
-# digit_indices = [np.where(exp_2_y_test == j)[0] for i, j in enumerate(digits_to_keep)]
-digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_group_1)]
+digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_group_2)]
 digit_indices
 # test_pairs, test_y = create_pairs(revised_X_test, digit_indices)
 
-test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_group_1)
+test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_group_2)
 test_pairs.shape
 
 # base_network = create_base_network(input_shape)
@@ -254,7 +215,7 @@ test_y.shape
 
 history = model.fit([train_pairs[:, 0], train_pairs[:, 1]], train_y,
                     batch_size=128,
-                    epochs=3,
+                    epochs=5,
                     validation_data=([test_pairs[:, 0], test_pairs[:, 1]], test_y))
 
 score = model.evaluate([test_pairs[:, 0], test_pairs[:, 1]], test_y, verbose=0)
@@ -265,10 +226,20 @@ print('Test accuracy:', score[1])
 digit_indices = [np.where(y_group_2 == j)[0] for i, j in enumerate(digits_group_2)]
 test_pairs, test_y = create_pairs_train(x_group_2, digit_indices, digits_group_2)
 score = model.evaluate([test_pairs[:, 0], test_pairs[:, 1]], test_y, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
 
 digit_indices = [np.where(y_group_1 == j)[0] for i, j in enumerate(digits_group_1)]
 test_pairs, test_y = create_pairs_train(x_group_1, digit_indices, digits_group_1)
 score = model.evaluate([test_pairs[:, 0], test_pairs[:, 1]], test_y, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
+
+digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_all)]
+test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_all)
+score = model.evaluate([test_pairs[:, 0], test_pairs[:, 1]], test_y, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
 
 y_prediction = model.predict([test_pairs[:, 0], test_pairs[:, 1]])
 train_accuracy = compute_accuracy(test_y, y_prediction)
