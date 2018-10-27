@@ -12,9 +12,9 @@ def create_pairs_train(x, digit_indices, train_digits):
     pairs = []
     labels = []
     # calculate the min number of training sample of each digit in training set
-    min_sample = [len(digit_indices[d]) for d in range(len(train_digits))]
+    min_sample = min([len(digit_indices[d]) for d in range(len(train_digits))])
     # calculate the number of pairs to be created
-    n = min(min_sample) - 1
+    n = min_sample - 1
     # Looping over each digits in the train_digits
     for d in range(len(train_digits)):
         # Create n pairs of same digits and then create the same amount of pairs for the different digits
@@ -115,21 +115,26 @@ def compute_accuracy(y_true, y_pred):
     return np.mean(pred == y_true)
 
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-# print(x_train)  # 60000*28*28
-# print(y_train)  # 60000
-# print(x_test)  # 10000*28*28
-# print(y_test)  # 10000
-img_rows, img_cols = x_train.shape[1:3]
-x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
-x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+def data_preprocess():
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    # print(x_train)  # 60000*28*28
+    # print(y_train)  # 60000
+    # print(x_test)  # 10000*28*28
+    # print(y_test)  # 10000
+    img_rows, img_cols = x_train.shape[1:3]
+    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
 
-x_train = x_train.astype('float32') / 255
-x_test = x_test.astype('float32') / 255
+    x_train = x_train.astype('float32') / 255
+    x_test = x_test.astype('float32') / 255
 
-# Concatenate the X and y data, then split the data into 80-20 proportio
-x_all = np.concatenate((x_train, x_test), axis=0)
-y_all = np.concatenate((y_train, y_test), axis=0)
+    # Concatenate the X and y data, then split the data into 80-20 proportio
+    x_all = np.concatenate((x_train, x_test), axis=0)
+    y_all = np.concatenate((y_train, y_test), axis=0)
+    return x_all, y_all
+
+
+x_all, y_all = data_preprocess()
 # X_train, X_test, y_train, y_test = train_test_split(x_all, y_all, test_size=0.2,
 #                                                     random_state=42)
 # Extract [0, 1, 8, 9] from training set and concatenate them to the test set
@@ -162,18 +167,17 @@ print('train groups:', [x.shape[0] for x in train_groups])
 print('test groups:', [x.shape[0] for x in test_groups])
 
 input_shape = x_train.shape[1:]
-input_shape
-# np.unique(y_to_keep)
-# Append the removed data to the testing set
 
 # print(revised_X_train)
-# digit_indices = [np.where(revised_y_train == i)[0] for i in range(10)]  # y_train中值为i的下标值
 digit_indices = [np.where(y_train == j)[0] for i, j in enumerate(digits_group_1)]
-# TODO: digit_indices usage
-digit_indices
+# digit_indices
 
+# max available pair number
+n = min([len(digit_indices[d]) for d in range(len(digits_group_1))]) - 1
+print(n)
+# num_of_train_pair = 500
 train_pairs, train_y = create_pairs_train(x_train, digit_indices, digits_group_1)
-train_pairs.shape
+# train_pairs.shape
 #
 # pairs = []
 # labels = []
@@ -215,11 +219,11 @@ train_pairs.shape
 
 # digit_indices = [np.where(revised_y_test == i)[0] for i in range(10)]
 # digit_indices = [np.where(exp_2_y_test == j)[0] for i, j in enumerate(digits_to_keep)]
-digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_all)]
+digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_group_2)]
 digit_indices
 # test_pairs, test_y = create_pairs(revised_X_test, digit_indices)
 
-test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_all)
+test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_group_2)
 test_pairs.shape
 
 # base_network = create_base_network(input_shape)
