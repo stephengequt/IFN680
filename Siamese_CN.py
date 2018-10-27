@@ -219,11 +219,11 @@ train_pairs, train_y = create_pairs_train(x_train, digit_indices, digits_group_1
 
 # digit_indices = [np.where(revised_y_test == i)[0] for i in range(10)]
 # digit_indices = [np.where(exp_2_y_test == j)[0] for i, j in enumerate(digits_to_keep)]
-digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_group_2)]
+digit_indices = [np.where(y_test == j)[0] for i, j in enumerate(digits_group_1)]
 digit_indices
 # test_pairs, test_y = create_pairs(revised_X_test, digit_indices)
 
-test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_group_2)
+test_pairs, test_y = create_pairs_train(x_test, digit_indices, digits_group_1)
 test_pairs.shape
 
 # base_network = create_base_network(input_shape)
