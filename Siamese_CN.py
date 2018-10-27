@@ -174,36 +174,36 @@ digit_indices
 
 train_pairs, train_y = create_pairs_train(x_train, digit_indices, digits_group_1)
 train_pairs.shape
-
-pairs = []
-labels = []
-x = x_train
-# calculate the min number of training sample of each digit in training set
-min_sample = [len(digit_indices[d]) for d in range(len(digits_group_1))]
-# calculate the number of pairs to be created
-n = 3000
-# Looping over each digits in the train_digits
-for d in range(len(digits_group_1)):
-    # Create n pairs of same digits and then create the same amount of pairs for the different digits
-    for i in range(n):
-        # Create a pair of same digits:
-        # retrieve the index of a pair of same digit
-        z1, z2 = digit_indices[d][i], digit_indices[d][i + 1]
-        # Append the image pair of same digits to the pair list
-        pairs += [[x[z1], x[z2]]]
-
-        # Create a pair of different digits
-        # First create a randome integer rand falls between (1, len(train_digits))
-        # let dn be (d+rand) % len(train_digit) so that dn will distinct from d
-        # and that is guaranteed to be a different digits
-        rand = random.randrange(1, len(digits_group_1))
-        dn = (d + rand) % len(digits_group_1)
-        # Use the dn and d to create a pair of different digits
-        # the append it to the pair list
-        z1, z2 = digit_indices[d][i], digit_indices[dn][i]
-        pairs += [[x[z1], x[z2]]]
-        # Append the corresponding label value for the true and false pairs of image created
-        labels += [1, 0]
+#
+# pairs = []
+# labels = []
+# x = x_train
+# # calculate the min number of training sample of each digit in training set
+# min_sample = [len(digit_indices[d]) for d in range(len(digits_group_1))]
+# # calculate the number of pairs to be created
+# n = 3000
+# # Looping over each digits in the train_digits
+# for d in range(len(digits_group_1)):
+#     # Create n pairs of same digits and then create the same amount of pairs for the different digits
+#     for i in range(n):
+#         # Create a pair of same digits:
+#         # retrieve the index of a pair of same digit
+#         z1, z2 = digit_indices[d][i], digit_indices[d][i + 1]
+#         # Append the image pair of same digits to the pair list
+#         pairs += [[x[z1], x[z2]]]
+#
+#         # Create a pair of different digits
+#         # First create a randome integer rand falls between (1, len(train_digits))
+#         # let dn be (d+rand) % len(train_digit) so that dn will distinct from d
+#         # and that is guaranteed to be a different digits
+#         rand = random.randrange(1, len(digits_group_1))
+#         dn = (d + rand) % len(digits_group_1)
+#         # Use the dn and d to create a pair of different digits
+#         # the append it to the pair list
+#         z1, z2 = digit_indices[d][i], digit_indices[dn][i]
+#         pairs += [[x[z1], x[z2]]]
+#         # Append the corresponding label value for the true and false pairs of image created
+#         labels += [1, 0]
 
 # print(tr_pairs)  # (108400,2,28,28)
 # print(tr_y, len(tr_y))  # 108400,1 0 1 0交叉
